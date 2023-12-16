@@ -1,0 +1,14 @@
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecomerce
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+  
+  flyway:
+    enabled: true
+    baseline-on-migrate: true

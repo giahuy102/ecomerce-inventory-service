@@ -1,0 +1,22 @@
+docker run -itd -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -v postgres_data:/var/lib/postgresql/data --name postgresql postgres
+psql -h localhost -U postgres
+\c ecomerce
+
+
+No need to code full flow
+Update inventory
+
+Flyway rollback as PayID project??????????????
+
+
+Bussiness for inventory
+Repository: Write custom hibernate method for each entity (Not use spring data jpa)
+How hibernate work with:
+    + Entity manager
+    + Transactional
+    + Relationship
+Temporarily work write service with each repository -> refactor later
+
+Use spring data JPA instead of directly entity manager
+
+Entity manager just for practice project
