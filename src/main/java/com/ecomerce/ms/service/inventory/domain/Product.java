@@ -1,17 +1,23 @@
-package com.ecomerce.ms.service.inventory.entity;
+package com.ecomerce.ms.service.inventory.domain;
 
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -21,13 +27,14 @@ public class Product {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "title")
+    @Column(name = "title", length = 100)
     private String title;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 400)
     private String imageUrl;
 
-    @Column(name = "sku_number")
+    @NotNull
+    @Column(name = "sku_number", length = 8, unique = true)
     private String skuNumber;
 
     @Column(name = "price_unit")
@@ -36,4 +43,7 @@ public class Product {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

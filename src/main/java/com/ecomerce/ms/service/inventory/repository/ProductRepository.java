@@ -1,24 +1,9 @@
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+package com.ecomerce.ms.service.inventory.repository;
 
-import com.ecomerce.ms.service.inventory.entity.Product;
+import com.ecomerce.ms.service.inventory.domain.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.springframework.stereotype.Repository;
+import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-@Repository
-public class ProductRepository {
-
-    @PersistenceContext
-    private final EntityManager entityManager;
-
-    public void save(Product product) {
-        if (entityManager.find(Product.class, product.getId()) == null) {
-            entityManager.persist(product);
-        } else {
-            entityManager.merge(product);
-        }
-    } 
+public interface ProductRepository extends JpaRepository<Product, UUID> {
 }

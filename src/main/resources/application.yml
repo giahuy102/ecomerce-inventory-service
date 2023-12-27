@@ -1,4 +1,8 @@
 
+server:
+  servlet:
+    context-path: /inventory
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ecomerce

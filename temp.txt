@@ -20,3 +20,18 @@ Temporarily work write service with each repository -> refactor later
 Use spring data JPA instead of directly entity manager
 
 Entity manager just for practice project
+
+
+
++ Requirements????
++ JPA relationship????
++ Best practice to write repository
+
+
++ Create one
++ Get One
++ Update one
++ Delete one
++ Get List with pagination
++ Update list (batch)
++ Delete list (batch)

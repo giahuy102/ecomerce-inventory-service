@@ -1,24 +1,9 @@
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+package com.ecomerce.ms.service.inventory.repository;
 
-import com.ecomerce.ms.service.inventory.entity.Category;
+import com.ecomerce.ms.service.inventory.domain.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.springframework.stereotype.Repository;
+import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-@Repository
-public class CategoryRepository {
-
-    @PersistenceContext
-    private final EntityManager entityManager;
-
-    public void save(Category category) {
-        if (entityManager.find(Category.class, category.getId()) == null) {
-            entityManager.persist(category);
-        } else {
-            entityManager.merge(category);
-        }
-    } 
+public interface CategoryRepository extends JpaRepository<Category, UUID> {
 }
