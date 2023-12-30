@@ -24,9 +24,9 @@ public class CategoryResponse {
     @JsonProperty(value = "image_url")
     private String imageUrl;
 
-    @JsonProperty(value = "parent_id")
-    private UUID parentId;
+    @JsonProperty(value = "parent_category_id")
+    private UUID parentCategoryId;
 
-    @JsonProperty(value = "childrenId")
-    private List<UUID> childrenId;
+    @JsonProperty(value = "sub_category_ids")
+    private List<UUID> subCategoryIds;
 }

@@ -20,6 +20,6 @@ public class CategoryRequest {
     @JsonProperty(value = "image_url")
     private String imageUrl;
 
-    @JsonProperty(value = "parent_id")
-    private UUID parentId;
+    @JsonProperty(value = "parent_category_id")
+    private UUID parentCategoryId;
 }

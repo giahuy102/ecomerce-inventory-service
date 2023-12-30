@@ -11,6 +11,4 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ResponseEntity<>
-
 }

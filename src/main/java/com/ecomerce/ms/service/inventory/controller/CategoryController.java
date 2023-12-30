@@ -1,6 +1,7 @@
 package com.ecomerce.ms.service.inventory.controller;
 
-import com.ecomerce.ms.service.inventory.domain.Category;
+import com.ecomerce.ms.service.inventory.model.CategoryRequest;
+import com.ecomerce.ms.service.inventory.model.CategoryResponse;
 import com.ecomerce.ms.service.inventory.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,8 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/api/categories/{categoryId}")
-    public ResponseEntity<Category> getCategory(@PathVariable UUID categoryId) {
-        return ResponseEntity.ok(categoryService.getCategory(categoryId));
-    }
-
     @PostMapping("/api/categories")
-    public ResponseEntity<Category> upsertCategory(@RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.upsertCategory(category));
+    public ResponseEntity<CategoryResponse> insertCategory(@RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.insertCategory(categoryRequest));
     }
 }

@@ -1,5 +1,6 @@
 package com.ecomerce.ms.service.inventory.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -35,10 +38,10 @@ public class Category {
     @Column(name = "image_url", length = 400)
     private String imageUrl;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
-    private List<Product> products;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Category parentCategory;
 
-//    @ManyToOne
-//    @JoinColumn(name = "parent_id")
-//    private Category parent;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentCategory")
+    private List<Category> subCategories = new ArrayList<>();
 }
