@@ -32,6 +32,6 @@ public class ProductResponse {
     @JsonProperty(value = "quantity")
     private Integer quantity;
 
-    @JsonProperty(value = "category")
-    private CategoryResponse category;
+    @JsonProperty(value = "category_id")
+    private UUID categoryId;
 }

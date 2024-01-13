@@ -23,7 +23,6 @@ import static com.ecomerce.ms.service.inventory.constant.MessageConstant.CATEGOR
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-
     private final CategoryMapper categoryMapper;
 
     @Transactional

@@ -1,44 +1,48 @@
 package com.ecomerce.ms.service.inventory.service;
 
 import com.ecomerce.ms.service.inventory.domain.Product;
+import com.ecomerce.ms.service.inventory.exception.DatabaseRecordNotFound;
+import com.ecomerce.ms.service.inventory.mapper.ProductMapper;
+import com.ecomerce.ms.service.inventory.model.ProductRequest;
+import com.ecomerce.ms.service.inventory.model.ProductResponse;
 import com.ecomerce.ms.service.inventory.repository.CategoryRepository;
 import com.ecomerce.ms.service.inventory.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
 import java.util.UUID;
+
+import static com.ecomerce.ms.service.inventory.constant.MessageConstant.PRODUCT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
-
     private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
 
-//    @PersistenceContext
-//    EntityManager em;
+    @Transactional
+    public ProductResponse insertProduct(ProductRequest productRequest) {
+        Product productRecord = productMapper.toProduct(productRequest);
+        UUID categoryId = productRequest.getCategoryId();
+        productRecord.setCategory(categoryRepository.getReferenceById(categoryId));
+        Product savedProductRecord = productRepository.save(productRecord);
+        ProductResponse productResponse = productMapper.toProductResponse(savedProductRecord);
+        productResponse.setCategoryId(categoryId);
+        return productResponse;
+    }
 
-    @PersistenceUnit(name = "test")
-    EntityManagerFactory emf;
-
-    public void test() {
-//        Product t = new Product();
-//        t.setSkuNumber("12345678");
-//        t.setCategory(categoryRepository.getReferenceById(UUID.fromString("6278181d-88e6-4377-8f65-448bc145f702")));
-//        productRepository.save(t);
-        System.out.println("=================================");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        Product m = em.find(Product.class, UUID.fromString("961f4ab9-18ef-4f50-8612-2d07a06a2a6f"));
-        tx.commit();
-//        em.close();
-        //        em.close();
-        //        em.clear();
-
-        System.out.println(m.getCategory().getImageUrl());
+    public ProductResponse updateProduct(ProductRequest productRequest, UUID productId) {
+        productRepository.findById(productId)
+                .orElseThrow(() -> new DatabaseRecordNotFound(PRODUCT_NOT_FOUND));
+        Product productRecord = productMapper.toProduct(productRequest);
+        UUID categoryId = productRequest.getCategoryId();
+        productRecord.setCategory(categoryRepository.getReferenceById(categoryId));
+        Product savedProductRecord = productRepository.save(productRecord);
+        ProductResponse productResponse = productMapper.toProductResponse(savedProductRecord);
+        productResponse.setCategoryId(categoryId);
+        return productResponse;
     }
 }
