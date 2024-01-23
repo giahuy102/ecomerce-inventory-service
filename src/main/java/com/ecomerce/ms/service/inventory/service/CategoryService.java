@@ -6,6 +6,7 @@ import com.ecomerce.ms.service.inventory.mapper.CategoryMapper;
 import com.ecomerce.ms.service.inventory.model.CategoryRequest;
 import com.ecomerce.ms.service.inventory.model.CategoryResponse;
 import com.ecomerce.ms.service.inventory.repository.CategoryRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.ecomerce.ms.service.inventory.constant.MessageConstant.CATEGORY_NOT_FOUND;
 
@@ -24,6 +26,14 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+
+    public List<CategoryResponse> getListCategory(Integer page) {
+        int PAGE_SIZE = 20;
+        List<Category> categoryRecords = categoryRepository.findAll(PageRequest.of(page, PAGE_SIZE)).getContent();
+        return categoryRecords.stream()
+                .map(this::buildCategoryResponse)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public CategoryResponse insertCategory(CategoryRequest categoryRequest) {
@@ -36,12 +46,32 @@ public class CategoryService {
     }
 
     @Transactional
+    public List<CategoryResponse> insertBatchCategory(List<CategoryRequest> categoryRequests) {
+        List<Category> categoryRecords = categoryMapper.toCategory(categoryRequests);
+        List<Category> parentCategoryRefs = categoryRequests
+                .stream()
+                .map(request -> getCategoryRef(request.getParentCategoryId()))
+                .collect(Collectors.toList());
+
+        IntStream.range(0, parentCategoryRefs.size())
+                .forEach(i -> categoryRecords.get(i).setParentCategory(parentCategoryRefs.get(i)));
+        List<Category> savedCategoryRecords = categoryRepository.saveAll(categoryRecords);
+        return savedCategoryRecords.stream()
+                .map(this::buildCategoryResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public CategoryResponse updateCategory(CategoryRequest categoryRequest, UUID categoryId) {
         categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new DatabaseRecordNotFound(CATEGORY_NOT_FOUND));
         Category categoryRecord = categoryMapper.toCategory(categoryRequest);
         Category savedCategoryRecord = saveCategory(categoryRecord, categoryRequest.getParentCategoryId(), null);
         return buildCategoryResponse(savedCategoryRecord);
+    }
+
+    private Category getCategoryRef(UUID categoryId) {
+        return categoryId != null ? categoryRepository.getReferenceById(categoryId) : null;
     }
 
     private Category saveCategory(Category categoryRecord, UUID parentCategoryId, UUID categoryId) {

@@ -13,6 +13,9 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+      jdbc.batch_size: 30
+      order_inserts: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
         format_sql: true
