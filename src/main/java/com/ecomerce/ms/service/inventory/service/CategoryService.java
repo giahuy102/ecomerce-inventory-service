@@ -27,6 +27,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
+    @Transactional
     public List<CategoryResponse> getListCategory(Integer page) {
         int PAGE_SIZE = 20;
         List<Category> categoryRecords = categoryRepository.findAll(PageRequest.of(page, PAGE_SIZE)).getContent();

@@ -11,11 +11,4 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final ProductService productService;
-
-    @GetMapping("/test")
-    public String test() {
-        productService.test();
-        return "Successfully testing";
-    }
-
 }
