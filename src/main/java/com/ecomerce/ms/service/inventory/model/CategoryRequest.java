@@ -14,6 +14,9 @@ import java.util.UUID;
 @Setter
 public class CategoryRequest {
 
+    @JsonProperty(value = "id")
+    private UUID id;
+
     @JsonProperty(value = "title")
     private String title;
 

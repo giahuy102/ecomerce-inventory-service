@@ -38,28 +38,18 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse insertCategory(CategoryRequest categoryRequest) {
-        UUID parentCategoryId = categoryRequest.getParentCategoryId();
-        Category parentCategory = parentCategoryId != null ? categoryRepository.getReferenceById(parentCategoryId) : null;
         Category categoryRecord = categoryMapper.toCategory(categoryRequest);
-        categoryRecord.setParentCategory(parentCategory);
-        Category savedCategoryRecord = categoryRepository.save(categoryRecord);
+        Category savedCategoryRecord = saveCategory(categoryRecord, categoryRequest.getParentCategoryId(), null);
         return buildCategoryResponse(savedCategoryRecord);
     }
 
     @Transactional
     public List<CategoryResponse> insertBatchCategory(List<CategoryRequest> categoryRequests) {
         List<Category> categoryRecords = categoryMapper.toCategory(categoryRequests);
-        List<Category> parentCategoryRefs = categoryRequests
-                .stream()
-                .map(request -> getCategoryRef(request.getParentCategoryId()))
-                .collect(Collectors.toList());
-
-        IntStream.range(0, parentCategoryRefs.size())
-                .forEach(i -> categoryRecords.get(i).setParentCategory(parentCategoryRefs.get(i)));
-        List<Category> savedCategoryRecords = categoryRepository.saveAll(categoryRecords);
-        return savedCategoryRecords.stream()
-                .map(this::buildCategoryResponse)
-                .collect(Collectors.toList());
+        List<Category> savedCategoryRecords = saveBatchCategory(categoryRecords, categoryRequests.stream()
+                .map(CategoryRequest::getParentCategoryId)
+                .collect(Collectors.toList()));
+        return buildBatchCategoryResponse(savedCategoryRecords);
     }
 
     @Transactional
@@ -67,8 +57,20 @@ public class CategoryService {
         categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new DatabaseRecordNotFound(CATEGORY_NOT_FOUND));
         Category categoryRecord = categoryMapper.toCategory(categoryRequest);
-        Category savedCategoryRecord = saveCategory(categoryRecord, categoryRequest.getParentCategoryId(), null);
+        Category savedCategoryRecord = saveCategory(categoryRecord, categoryRequest.getParentCategoryId(), categoryId);
         return buildCategoryResponse(savedCategoryRecord);
+    }
+
+    @Transactional
+    public List<CategoryResponse> updateBatchCategory(List<CategoryRequest> categoryRequests) {
+        categoryRequests.forEach(request -> categoryRepository
+                .findById(request.getId())
+                .orElseThrow(() -> new DatabaseRecordNotFound(CATEGORY_NOT_FOUND)));
+        List<Category> categoryRecords = categoryMapper.toCategory(categoryRequests);
+        List<Category> savedCategoryRecords = saveBatchCategory(categoryRecords, categoryRequests.stream()
+                .map(CategoryRequest::getId)
+                .collect(Collectors.toList()));
+        return buildBatchCategoryResponse(savedCategoryRecords);
     }
 
     private Category getCategoryRef(UUID categoryId) {
@@ -84,6 +86,13 @@ public class CategoryService {
         return categoryRepository.save(categoryRecord);
     }
 
+    private List<Category> saveBatchCategory(List<Category> categoryRecords, List<UUID> parentCategoryIds) {
+        IntStream.range(0, categoryRecords.size())
+                .forEach(i -> categoryRecords.get(i)
+                        .setParentCategory(getCategoryRef(parentCategoryIds.get(i))));
+        return categoryRepository.saveAll(categoryRecords);
+    }
+
     private CategoryResponse buildCategoryResponse(Category categoryRecord) {
         List<UUID> subCategoryIds = categoryRecord.getSubCategories()
                 .stream()
@@ -94,5 +103,11 @@ public class CategoryService {
         categoryResponse.setParentCategoryId(parentCategoryRecord != null ? parentCategoryRecord.getId() : null);
         categoryResponse.setSubCategoryIds(subCategoryIds);
         return categoryResponse;
+    }
+
+    private List<CategoryResponse> buildBatchCategoryResponse(List<Category> categoryRecords) {
+        return categoryRecords.stream()
+                .map(this::buildCategoryResponse)
+                .collect(Collectors.toList());
     }
 }
