@@ -8,11 +8,15 @@ import com.ecomerce.ms.service.inventory.model.ProductResponse;
 import com.ecomerce.ms.service.inventory.repository.CategoryRepository;
 import com.ecomerce.ms.service.inventory.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static com.ecomerce.ms.service.inventory.constant.ApplicationConfigConstant.PRODUCT_PAGE_SIZE;
 import static com.ecomerce.ms.service.inventory.constant.MessageConstant.PRODUCT_NOT_FOUND;
 
 @Service
@@ -24,25 +28,35 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     @Transactional
-    public ProductResponse insertProduct(ProductRequest productRequest) {
-        Product productRecord = productMapper.toProduct(productRequest);
-        UUID categoryId = productRequest.getCategoryId();
-        productRecord.setCategory(categoryRepository.getReferenceById(categoryId));
-        Product savedProductRecord = productRepository.save(productRecord);
-        ProductResponse productResponse = productMapper.toProductResponse(savedProductRecord);
-        productResponse.setCategoryId(categoryId);
-        return productResponse;
+    public List<ProductResponse> getListProduct(int pageNum) {
+        List<Product> productRecords = productRepository.findAll(PageRequest.of(pageNum, PRODUCT_PAGE_SIZE)).getContent();
+        return productRecords.stream()
+                .map(this::buildProductResponse)
+                .collect(Collectors.toList());
     }
 
+    @Transactional
+    public ProductResponse insertProduct(ProductRequest productRequest) {
+        Product productRecord = productMapper.toProduct(productRequest);
+        return buildProductResponse(saveProduct(productRecord, productRequest.getCategoryId()));
+    }
+
+    @Transactional
     public ProductResponse updateProduct(ProductRequest productRequest, UUID productId) {
         productRepository.findById(productId)
                 .orElseThrow(() -> new DatabaseRecordNotFound(PRODUCT_NOT_FOUND));
         Product productRecord = productMapper.toProduct(productRequest);
-        UUID categoryId = productRequest.getCategoryId();
+        return buildProductResponse(saveProduct(productRecord, productRequest.getCategoryId()));
+    }
+
+    private Product saveProduct(Product productRecord, UUID categoryId) {
         productRecord.setCategory(categoryRepository.getReferenceById(categoryId));
-        Product savedProductRecord = productRepository.save(productRecord);
-        ProductResponse productResponse = productMapper.toProductResponse(savedProductRecord);
-        productResponse.setCategoryId(categoryId);
+        return productRepository.save(productRecord);
+    }
+
+    private ProductResponse buildProductResponse(Product productRecord) {
+        ProductResponse productResponse = productMapper.toProductResponse(productRecord);
+        productResponse.setCategoryId(productRecord.getCategory().getId());
         return productResponse;
     }
 }

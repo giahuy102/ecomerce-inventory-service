@@ -18,6 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.ecomerce.ms.service.inventory.constant.ApplicationConfigConstant.CATEGORY_PAGE_SIZE;
 import static com.ecomerce.ms.service.inventory.constant.MessageConstant.CATEGORY_NOT_FOUND;
 
 @RequiredArgsConstructor
@@ -28,9 +29,8 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Transactional
-    public List<CategoryResponse> getListCategory(Integer page) {
-        int PAGE_SIZE = 20;
-        List<Category> categoryRecords = categoryRepository.findAll(PageRequest.of(page, PAGE_SIZE)).getContent();
+    public List<CategoryResponse> getListCategory(int pageNum) {
+        List<Category> categoryRecords = categoryRepository.findAll(PageRequest.of(pageNum, CATEGORY_PAGE_SIZE)).getContent();
         return categoryRecords.stream()
                 .map(this::buildCategoryResponse)
                 .collect(Collectors.toList());
