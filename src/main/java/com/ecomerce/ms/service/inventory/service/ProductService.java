@@ -1,5 +1,6 @@
 package com.ecomerce.ms.service.inventory.service;
 
+import com.ecomerce.ms.service.inventory.domain.Category;
 import com.ecomerce.ms.service.inventory.domain.Product;
 import com.ecomerce.ms.service.inventory.exception.DatabaseRecordNotFound;
 import com.ecomerce.ms.service.inventory.mapper.ProductMapper;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.ecomerce.ms.service.inventory.constant.ApplicationConfigConstant.PRODUCT_PAGE_SIZE;
 import static com.ecomerce.ms.service.inventory.constant.MessageConstant.PRODUCT_NOT_FOUND;
@@ -49,14 +51,35 @@ public class ProductService {
         return buildProductResponse(saveProduct(productRecord, productRequest.getCategoryId()));
     }
 
+    public List<ProductResponse> insertBatchProduct(List<ProductRequest> productRequests) {
+        List<Product> productRecords = productMapper.toProduct(productRequests);
+        List<Product> savedProductRecords = saveBatchProduct(productRecords, productRequests.stream()
+                .map(ProductRequest::getCategoryId)
+                .collect(Collectors.toList()));
+        return savedProductRecords.stream()
+                .map(this::buildProductResponse)
+                .collect(Collectors.toList());
+    }
+
     private Product saveProduct(Product productRecord, UUID categoryId) {
-        productRecord.setCategory(categoryRepository.getReferenceById(categoryId));
+        productRecord.setCategory(getCategoryRef(categoryId));
         return productRepository.save(productRecord);
+    }
+
+    private List<Product> saveBatchProduct(List<Product> productRecords, List<UUID> categoryIds) {
+        IntStream.range(0, productRecords.size())
+                .forEach(i -> productRecords.get(i)
+                        .setCategory(getCategoryRef(categoryIds.get(i))));
+        return productRepository.saveAll(productRecords);
     }
 
     private ProductResponse buildProductResponse(Product productRecord) {
         ProductResponse productResponse = productMapper.toProductResponse(productRecord);
         productResponse.setCategoryId(productRecord.getCategory().getId());
         return productResponse;
+    }
+
+    private Category getCategoryRef(UUID categoryId) {
+        return categoryId != null ? categoryRepository.getReferenceById(categoryId) : null;
     }
 }
