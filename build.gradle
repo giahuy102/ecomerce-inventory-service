@@ -1,11 +1,31 @@
-plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.16'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:2.7.18")
+		classpath('com.github.davidmc24.gradle.plugin:gradle-avro-plugin:1.9.1')
+		classpath('org.flywaydb:flyway-gradle-plugin:9.19.4')
+	}
 }
 
-group = 'com.ecomerce.ms.service'
-version = '0.0.1-SNAPSHOT'
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven {
+		url "https://packages.confluent.io/maven"
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.davidmc24.gradle.plugin.avro'
+apply plugin: "org.flywaydb.flyway"
+
+group = 'com.ecomerce.ms.service.inventory'
+version = '1.0.0-SNAPSHOT'
 
 java {
 	sourceCompatibility = '11'
@@ -17,46 +37,42 @@ configurations {
 	}
 }
 
-repositories {
-	mavenCentral()
-}
-
 ext {
-	springCloudVersion = "2021.0.8"
 	mapstructVersion = "1.5.5.Final"
 }
 
+avro {
+	stringType = 'CharSequence'
+	outputCharacterEncoding = 'UTF-8'
+}
+
 dependencies {
-	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	annotationProcessor('org.projectlombok:lombok')
+	compileOnly('org.projectlombok:lombok')
 
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	// implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-groovy-templates'
-	// implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	// implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-	// implementation 'org.springframework.kafka:spring-kafka'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// testImplementation 'org.springframework.kafka:spring-kafka-test'
-	// testImplementation 'org.springframework.security:spring-security-test'
-}
+	runtimeOnly('org.postgresql:postgresql')
+	implementation('org.flywaydb:flyway-core')
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
-}
+	implementation("org.mapstruct:mapstruct:${mapstructVersion}")
+	annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+	testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
 
-tasks.named('test') {
-	useJUnitPlatform()
+	implementation('org.springframework.boot:spring-boot-starter-actuator')
+	// implementation('org.springframework.boot:spring-boot-starter-data-jdbc')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('org.springframework.boot:spring-boot-starter-groovy-templates')
+	// implementation('org.springframework.boot:spring-boot-starter-jdbc')
+	// implementation('org.springframework.boot:spring-boot-starter-security')
+	implementation('org.springframework.boot:spring-boot-starter-validation')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('org.springframework.boot:spring-boot-starter-webflux')
+	implementation('org.springframework.kafka:spring-kafka')
+	implementation('org.apache.avro:avro:1.11.3')
+	implementation('io.confluent:kafka-avro-serializer:7.6.0')
+//	implementation('org.apache.kafka:kafka-clients:3.7.0')
+	implementation('com.huyle:lib-domain-driven:1.0.0-SNAPSHOT')
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	// testImplementation('org.springframework.kafka:spring-kafka-test')
+	// testImplementation('org.springframework.security:spring-security-test')
 }

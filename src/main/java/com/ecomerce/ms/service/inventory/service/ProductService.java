@@ -38,6 +38,13 @@ public class ProductService {
     }
 
     @Transactional
+    public ProductResponse getProductById(UUID productId) {
+        Product record = productRepository.findById(productId)
+                .orElseThrow(() -> new DatabaseRecordNotFound(PRODUCT_NOT_FOUND));
+        return buildProductResponse(record);
+    }
+
+    @Transactional
     public ProductResponse insertProduct(ProductRequest productRequest) {
         Product productRecord = productMapper.toProduct(productRequest);
         return buildProductResponse(saveProduct(productRecord, productRequest.getCategoryId()));

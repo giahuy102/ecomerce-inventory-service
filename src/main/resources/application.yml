@@ -1,5 +1,6 @@
 
 server:
+  port: 8081
   servlet:
     context-path: /inventory
 
@@ -25,6 +26,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    schemas: inventory_service
 
 logging:
   level:

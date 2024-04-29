@@ -23,7 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "products", schema = "inventory")
+@Table(name = "products", schema = "inventory_service")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
