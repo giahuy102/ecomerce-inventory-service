@@ -1,8 +1,8 @@
-package com.ecomerce.ms.service.inventory.mapper;
+package com.ecomerce.ms.service.inventory.infrastructure.mapper;
 
-import com.ecomerce.ms.service.inventory.domain.Product;
-import com.ecomerce.ms.service.inventory.model.ProductRequest;
-import com.ecomerce.ms.service.inventory.model.ProductResponse;
+import com.ecomerce.ms.service.inventory.domain.aggregate.Product;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.ProductRequest;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.ProductResponse;
 import org.mapstruct.Mapper;
 
 import java.util.List;

@@ -1,6 +1,5 @@
-package com.ecomerce.ms.service.inventory.repository;
+package com.ecomerce.ms.service.inventory.domain.aggregate;
 
-import com.ecomerce.ms.service.inventory.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

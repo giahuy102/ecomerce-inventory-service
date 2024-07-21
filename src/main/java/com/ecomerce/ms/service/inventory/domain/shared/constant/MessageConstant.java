@@ -1,4 +1,4 @@
-package com.ecomerce.ms.service.inventory.constant;
+package com.ecomerce.ms.service.inventory.domain.shared.constant;
 
 import lombok.experimental.UtilityClass;
 

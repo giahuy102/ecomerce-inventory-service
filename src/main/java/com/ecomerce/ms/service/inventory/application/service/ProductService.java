@@ -1,13 +1,13 @@
-package com.ecomerce.ms.service.inventory.service;
+package com.ecomerce.ms.service.inventory.application.service;
 
-import com.ecomerce.ms.service.inventory.domain.Category;
-import com.ecomerce.ms.service.inventory.domain.Product;
-import com.ecomerce.ms.service.inventory.exception.DatabaseRecordNotFound;
-import com.ecomerce.ms.service.inventory.mapper.ProductMapper;
-import com.ecomerce.ms.service.inventory.model.ProductRequest;
-import com.ecomerce.ms.service.inventory.model.ProductResponse;
-import com.ecomerce.ms.service.inventory.repository.CategoryRepository;
-import com.ecomerce.ms.service.inventory.repository.ProductRepository;
+import com.ecomerce.ms.service.inventory.domain.aggregate.Category;
+import com.ecomerce.ms.service.inventory.domain.aggregate.Product;
+import com.ecomerce.ms.service.inventory.domain.shared.exception.DatabaseRecordNotFound;
+import com.ecomerce.ms.service.inventory.infrastructure.mapper.ProductMapper;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.ProductRequest;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.ProductResponse;
+import com.ecomerce.ms.service.inventory.domain.aggregate.CategoryRepository;
+import com.ecomerce.ms.service.inventory.domain.aggregate.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.ecomerce.ms.service.inventory.constant.ApplicationConfigConstant.PRODUCT_PAGE_SIZE;
-import static com.ecomerce.ms.service.inventory.constant.MessageConstant.PRODUCT_NOT_FOUND;
+import static com.ecomerce.ms.service.inventory.domain.shared.constant.ApplicationConfigConstant.PRODUCT_PAGE_SIZE;
+import static com.ecomerce.ms.service.inventory.domain.shared.constant.MessageConstant.PRODUCT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

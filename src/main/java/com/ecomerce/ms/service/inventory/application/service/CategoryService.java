@@ -1,11 +1,11 @@
-package com.ecomerce.ms.service.inventory.service;
+package com.ecomerce.ms.service.inventory.application.service;
 
-import com.ecomerce.ms.service.inventory.domain.Category;
-import com.ecomerce.ms.service.inventory.exception.DatabaseRecordNotFound;
-import com.ecomerce.ms.service.inventory.mapper.CategoryMapper;
-import com.ecomerce.ms.service.inventory.model.CategoryRequest;
-import com.ecomerce.ms.service.inventory.model.CategoryResponse;
-import com.ecomerce.ms.service.inventory.repository.CategoryRepository;
+import com.ecomerce.ms.service.inventory.domain.aggregate.Category;
+import com.ecomerce.ms.service.inventory.domain.shared.exception.DatabaseRecordNotFound;
+import com.ecomerce.ms.service.inventory.infrastructure.mapper.CategoryMapper;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.CategoryRequest;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.CategoryResponse;
+import com.ecomerce.ms.service.inventory.domain.aggregate.CategoryRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +18,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.ecomerce.ms.service.inventory.constant.ApplicationConfigConstant.CATEGORY_PAGE_SIZE;
-import static com.ecomerce.ms.service.inventory.constant.MessageConstant.CATEGORY_NOT_FOUND;
+import static com.ecomerce.ms.service.inventory.domain.shared.constant.ApplicationConfigConstant.CATEGORY_PAGE_SIZE;
+import static com.ecomerce.ms.service.inventory.domain.shared.constant.MessageConstant.CATEGORY_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service

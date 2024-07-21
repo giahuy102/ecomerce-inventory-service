@@ -1,4 +1,4 @@
-package com.ecomerce.ms.service.inventory.exception;
+package com.ecomerce.ms.service.inventory.domain.shared.exception;
 
 public class BaseException extends RuntimeException {
     public BaseException(String message) {

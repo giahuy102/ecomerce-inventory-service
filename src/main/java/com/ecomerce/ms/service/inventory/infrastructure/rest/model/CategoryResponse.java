@@ -1,4 +1,4 @@
-package com.ecomerce.ms.service.inventory.model;
+package com.ecomerce.ms.service.inventory.infrastructure.rest.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

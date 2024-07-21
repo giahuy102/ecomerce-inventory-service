@@ -1,4 +1,4 @@
-package com.ecomerce.ms.service.inventory.domain;
+package com.ecomerce.ms.service.inventory.domain.aggregate;
 
 import java.util.UUID;
 

@@ -1,8 +1,8 @@
-package com.ecomerce.ms.service.inventory.controller;
+package com.ecomerce.ms.service.inventory.infrastructure.rest;
 
-import com.ecomerce.ms.service.inventory.model.ProductRequest;
-import com.ecomerce.ms.service.inventory.model.ProductResponse;
-import com.ecomerce.ms.service.inventory.service.ProductService;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.ProductRequest;
+import com.ecomerce.ms.service.inventory.infrastructure.rest.model.ProductResponse;
+import com.ecomerce.ms.service.inventory.application.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
