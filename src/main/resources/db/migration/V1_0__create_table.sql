@@ -1,4 +1,4 @@
-CREATE TABLE inventory_service.categories (
+CREATE TABLE categories (
     id UUID,
     title VARCHAR(100),
     image_url VARCHAR(400),
@@ -16,7 +16,7 @@ CREATE TABLE products (
     title VARCHAR(100),
     image_url VARCHAR(400),
     sku_number CHAR(8) UNIQUE NOT NULL,
-    price_unit DOUBLE PRECISION,
+    price_unit FLOAT,
     quantity INTEGER,
     category_id UUID,
     CONSTRAINT pk_product PRIMARY KEY(id),
