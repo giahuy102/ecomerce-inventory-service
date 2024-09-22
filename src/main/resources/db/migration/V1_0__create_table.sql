@@ -19,6 +19,7 @@ CREATE TABLE products (
     price_unit FLOAT,
     quantity INTEGER,
     category_id UUID,
+    merchant_user_id UUID,
     CONSTRAINT pk_product PRIMARY KEY(id),
     CONSTRAINT fk_product_category
         FOREIGN KEY(category_id)

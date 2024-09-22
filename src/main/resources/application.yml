@@ -1,6 +1,6 @@
 
 server:
-  port: 8080
+  port: 8081
   servlet:
     context-path: /inventory-service
 
@@ -17,6 +17,7 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
+        default_schema: inventory_service
         format_sql: true
         jdbc:
           batch_size: 30
@@ -39,10 +40,14 @@ spring:
         enable.idempotence: true
         max.in.flight.requests.per.connection: 3 # default is 5
     consumer:
-      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      key-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
       auto-offset-reset: earliest
+      groupId: test-consumer
     properties:
+      specific:
+        avro:
+          reader: true
       schema:
         registry:
           url: http://localhost:8087

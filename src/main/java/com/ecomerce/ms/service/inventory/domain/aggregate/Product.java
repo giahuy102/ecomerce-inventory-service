@@ -49,4 +49,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(name = "merchant_user_id")
+    private UUID merchantUserId;
 }

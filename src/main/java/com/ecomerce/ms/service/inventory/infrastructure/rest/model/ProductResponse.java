@@ -34,4 +34,7 @@ public class ProductResponse {
 
     @JsonProperty(value = "category_id")
     private UUID categoryId;
+
+    @JsonProperty(value = "merchant_user_id")
+    private UUID merchantUserId;
 }

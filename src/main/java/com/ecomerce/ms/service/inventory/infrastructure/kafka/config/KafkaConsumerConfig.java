@@ -22,7 +22,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public <K, V> ConsumerFactory<K, V> consumerFactory() {
-        Map<String, Object> configMap = kafkaProperties.buildProducerProperties();
+        Map<String, Object> configMap = kafkaProperties.buildConsumerProperties();
         return new DefaultKafkaConsumerFactory<>(configMap);
     }
 
