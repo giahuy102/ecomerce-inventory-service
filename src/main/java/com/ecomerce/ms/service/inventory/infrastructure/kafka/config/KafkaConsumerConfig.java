@@ -13,7 +13,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import java.util.Map;
 
-@Configuration
+// Disable Kafka temporarily
+//@Configuration
 @EnableKafka
 @RequiredArgsConstructor
 public class KafkaConsumerConfig {

@@ -12,7 +12,8 @@ import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.Map;
 
-@Configuration
+// Disable Kafka temporarily
+//@Configuration
 @RequiredArgsConstructor
 public class KafkaProducerConfig {
 

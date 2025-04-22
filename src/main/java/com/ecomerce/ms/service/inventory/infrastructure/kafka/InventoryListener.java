@@ -27,7 +27,8 @@ import static com.ecomerce.ms.service.inventory.domain.shared.constant.Constants
 import static com.ecomerce.ms.service.inventory.domain.shared.constant.Constants.INVENTORY_PROCESSING_REPLY_TOPIC;
 import static com.ecomerce.ms.service.inventory.domain.shared.constant.Constants.INVENTORY_PROCESSING_TOPIC;
 
-@Component
+// Disable Kafka temporarily
+//@Component
 @RequiredArgsConstructor
 @Slf4j
 public class InventoryListener {
