@@ -9,6 +9,8 @@ import com.ecomerce.ms.service.inventory.infrastructure.rest.model.ProductRespon
 import com.ecomerce.ms.service.inventory.domain.aggregate.CategoryRepository;
 import com.ecomerce.ms.service.inventory.domain.aggregate.ProductRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,7 @@ public class ProductService {
     }
 
     @Transactional
+    @Cacheable(value = "productCache", key = "#productId")
     public ProductResponse getProductById(UUID productId) {
         Product record = productRepository.findById(productId)
                 .orElseThrow(() -> new DatabaseRecordNotFound(PRODUCT_NOT_FOUND));
